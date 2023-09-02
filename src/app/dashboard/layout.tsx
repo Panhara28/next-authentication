@@ -1,33 +1,11 @@
 "use client";
-
-import axios, { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-
-interface UserResponse {
-  user: string | null;
-  error: AxiosError | null;
-}
-
+import useAuthentication from "@/hooks/useAuthentication";
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [isAuth, setAuth] = useState<boolean>(false);
-  const { push } = useRouter();
-  useEffect(() => {
-    (async () => {
-      const { user, error } = await getUser();
-
-      if (error) {
-        push("/");
-        return;
-      }
-
-      setAuth(true);
-    })();
-  }, [push]);
+  const { isAuth } = useAuthentication();
 
   if (!isAuth) {
     return <p>Loading...</p>;
@@ -39,21 +17,4 @@ export default function DashboardLayout({
       {children}
     </main>
   );
-}
-
-async function getUser(): Promise<UserResponse> {
-  try {
-    const { data } = await axios.get("/api/auth/me");
-
-    return {
-      user: data,
-      error: null,
-    };
-  } catch (e) {
-    const error = e as AxiosError;
-    return {
-      user: null,
-      error,
-    };
-  }
 }

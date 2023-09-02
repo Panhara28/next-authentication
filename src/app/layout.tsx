@@ -1,5 +1,8 @@
+"use client";
+import useAuthentication from "@/hooks/useAuthentication";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { useRouter } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
